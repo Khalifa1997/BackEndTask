@@ -52,10 +52,10 @@ def delete():
 def add():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor) 
     name =request.args.get('name')
-    
+
     if name.isalpha()==False:
         return "Enter only letters", 400
-    cursor.execute('insert into customer (Name) values("%s")',(name))
+    cursor.execute('insert into customer (Name) values("%s")' % (str(name)))
     
     cursor.connection.commit()    
-    return("account")
+    return "Suceess",200
