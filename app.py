@@ -28,7 +28,7 @@ def get():
     if not account:
         return "User not found", 400
     
-    return(account)
+    return account['Name']
 
 @app.route('/delete', methods=['POST'])
 def delete():
@@ -46,7 +46,7 @@ def delete():
     cur = mysql.connection.cursor()
     cur.execute("DELETE FROM customer WHERE CID = %s" % (cid))
     cur.connection.commit()    
-    return("account")
+    return "success",200
 
 @app.route('/add', methods=['POST'])
 def add():
@@ -56,6 +56,24 @@ def add():
     if name.isalpha()==False:
         return "Enter only letters", 400
     cursor.execute('insert into customer (Name) values("%s")' % (str(name)))
-    
     cursor.connection.commit()    
-    return "Suceess",200
+    return "success",200
+
+
+@app.route('/edit', methods=['POST'])
+def edit():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cid =request.args.get('id')
+    newName =request.args.get('name')
+    if cid.isalpha():
+            return "ID must be numbers only",400
+    if newName.isalpha()==False:
+        return "Name must be only letters", 400
+    
+    cursor.execute('Select COUNT(*) from (SELECT * from customer WHERE CID=%s) AS T',(cid))
+    if (cursor.fetchone()['COUNT(*)']==0):
+        return "No corresponding Customer", 400
+
+    cursor.execute('Update customer SET Name = "%s" where CID =%s' % ( newName,cid))    
+    cursor.connection.commit()    
+    return "success",200

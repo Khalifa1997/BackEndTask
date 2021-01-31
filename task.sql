@@ -23,6 +23,7 @@ CREATE TABLE Booking (
     VehicleID int UNSIGNED ,
     Datebooked DATE NOT NULL,
     DateReturned DATE NOT NULL,
+    Fee INT unsigned,
     PRIMARY KEY (BookingID),
     FOREIGN KEY (CustomerID) REFERENCES Customer(CID) ON DELETE CASCADE ON update cascade,
     FOREIGN KEY (VehicleID) REFERENCES Vehicle(ID) ON DELETE CASCADE ON update cascade
